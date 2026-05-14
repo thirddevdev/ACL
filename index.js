@@ -265,8 +265,9 @@ client.on('interactionCreate', async (interaction) => {
         });
       }
 
-      // Role restriction
-      if (!memberHasRole(interaction.member, LEAGUE_HOST_ROLE_ID)) {
+      // Role restriction — fetch fresh from API to bypass stale cache
+      const freshMember = await interaction.guild.members.fetch({ user: interaction.user.id, force: true });
+      if (!freshMember.roles.cache.has(LEAGUE_HOST_ROLE_ID)) {
         return interaction.reply({
           content: 'You do not have permission to host leagues.',
           flags: 64,
@@ -343,8 +344,9 @@ client.on('interactionCreate', async (interaction) => {
 
     // ── /league cancel ────────────────────────────────────────────────────
     if (sub === 'cancel') {
-      // Role restriction
-      if (!memberHasRole(interaction.member, LEAGUE_HOST_ROLE_ID)) {
+      // Role restriction — fetch fresh from API to bypass stale cache
+      const freshMember = await interaction.guild.members.fetch({ user: interaction.user.id, force: true });
+      if (!freshMember.roles.cache.has(LEAGUE_HOST_ROLE_ID)) {
         return interaction.reply({
           content: 'You do not have permission to cancel leagues.',
           flags: 64,
@@ -434,7 +436,8 @@ client.on('interactionCreate', async (interaction) => {
 
     // ── Cancel button ─────────────────────────────────────────────────────
     if (action === 'cancel') {
-      if (!memberHasRole(interaction.member, LEAGUE_HOST_ROLE_ID)) {
+      const freshMember = await interaction.guild.members.fetch({ user: interaction.user.id, force: true });
+      if (!freshMember.roles.cache.has(LEAGUE_HOST_ROLE_ID)) {
         return interaction.reply({
           content: 'You do not have permission to cancel leagues.',
           flags: 64,
