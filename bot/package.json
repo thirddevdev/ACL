@@ -1,0 +1,14 @@
+{
+  "name": "fcd-league-bot",
+  "version": "1.0.0",
+  "description": "FCD League Bot",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "discord.js": "^14.16.3",
+    "@discordjs/rest": "^2.4.0",
+    "discord-api-types": "^0.37.97"
+  }
+}
