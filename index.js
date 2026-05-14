@@ -22,6 +22,15 @@ const LEAGUE_HOST_ROLE_ID = '1504161875644907714';
 const LEAGUES_PING_ROLE_ID = '1504161847102804069';
 const DB_PATH = path.join(__dirname, 'database.json');
 
+// ─── Role check (handles cached GuildMember and raw API member) ─────────────
+function memberHasRole(member, roleId) {
+  const roles = member.roles;
+  if (!roles) return false;
+  if (Array.isArray(roles)) return roles.includes(roleId);
+  if (typeof roles.cache !== 'undefined') return roles.cache.has(roleId);
+  return false;
+}
+
 // ─── Database helpers ───────────────────────────────────────────────────────
 function loadDB() {
   try {
@@ -251,8 +260,7 @@ client.on('interactionCreate', async (interaction) => {
       }
 
       // Role restriction
-      const member = interaction.member;
-      if (!member.roles.cache.has(LEAGUE_HOST_ROLE_ID)) {
+      if (!memberHasRole(interaction.member, LEAGUE_HOST_ROLE_ID)) {
         return interaction.reply({
           content: 'You do not have permission to host leagues.',
           flags: 64,
@@ -330,8 +338,7 @@ client.on('interactionCreate', async (interaction) => {
     // ── /league cancel ────────────────────────────────────────────────────
     if (sub === 'cancel') {
       // Role restriction
-      const member = interaction.member;
-      if (!member.roles.cache.has(LEAGUE_HOST_ROLE_ID)) {
+      if (!memberHasRole(interaction.member, LEAGUE_HOST_ROLE_ID)) {
         return interaction.reply({
           content: 'You do not have permission to cancel leagues.',
           flags: 64,
@@ -421,8 +428,7 @@ client.on('interactionCreate', async (interaction) => {
 
     // ── Cancel button ─────────────────────────────────────────────────────
     if (action === 'cancel') {
-      const member = await interaction.guild.members.fetch(interaction.user.id);
-      if (!member.roles.cache.has(LEAGUE_HOST_ROLE_ID)) {
+      if (!memberHasRole(interaction.member, LEAGUE_HOST_ROLE_ID)) {
         return interaction.reply({
           content: 'You do not have permission to cancel leagues.',
           flags: 64,
