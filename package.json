@@ -4,7 +4,9 @@
   "license": "MIT",
   "scripts": {
     "preinstall": "sh -c 'rm -f package-lock.json yarn.lock; if [ -n \"$RAILWAY_ENVIRONMENT\" ]; then exit 0; fi; case \"$npm_config_user_agent\" in pnpm/*) ;; *) echo \"Use pnpm instead\" >&2; exit 1 ;; esac'",
+    "postinstall": "if [ -n \"$RAILWAY_ENVIRONMENT\" ]; then cd bot && npm install; fi",
     "build": "if [ -n \"$RAILWAY_ENVIRONMENT\" ]; then exit 0; fi && pnpm run typecheck && pnpm -r --if-present run build",
+    "start": "node bot/index.js",
     "typecheck:libs": "tsc --build",
     "typecheck": "pnpm run typecheck:libs && pnpm -r --filter \"./artifacts/**\" --filter \"./scripts\" --if-present run typecheck"
   },
