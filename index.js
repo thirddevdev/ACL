@@ -22,12 +22,18 @@ const LEAGUE_HOST_ROLE_ID = '1504161875644907714';
 const LEAGUES_PING_ROLE_ID = '1504161847102804069';
 const DB_PATH = path.join(__dirname, 'database.json');
 
-// ─── Role check (handles cached GuildMember and raw API member) ─────────────
+// ─── Role check (handles all Discord.js member states) ──────────────────────
 function memberHasRole(member, roleId) {
+  if (!member) return false;
+  // GuildMember internal raw array (most reliable, always populated from interaction data)
+  if (member._roles && Array.isArray(member._roles)) {
+    return member._roles.includes(roleId);
+  }
+  // APIInteractionGuildMember — roles is a plain string[]
   const roles = member.roles;
-  if (!roles) return false;
   if (Array.isArray(roles)) return roles.includes(roleId);
-  if (typeof roles.cache !== 'undefined') return roles.cache.has(roleId);
+  // GuildMemberRoleManager cache fallback
+  if (roles && roles.cache) return roles.cache.has(roleId);
   return false;
 }
 
