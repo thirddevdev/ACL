@@ -1,22 +1,14 @@
 {
-  "name": "workspace",
-  "version": "0.0.0",
-  "license": "MIT",
+  "name": "fcd-league-bot",
+  "version": "1.0.0",
+  "description": "FCD League Bot",
+  "main": "index.js",
   "scripts": {
-    "preinstall": "sh -c 'rm -f package-lock.json yarn.lock; if [ -n \"$RAILWAY_ENVIRONMENT\" ]; then exit 0; fi; case \"$npm_config_user_agent\" in pnpm/*) ;; *) echo \"Use pnpm instead\" >&2; exit 1 ;; esac'",
-    "build": "if [ -n \"$RAILWAY_ENVIRONMENT\" ]; then exit 0; fi && pnpm run typecheck && pnpm -r --if-present run build",
-    "start": "node index.js",
-    "typecheck:libs": "tsc --build",
-    "typecheck": "pnpm run typecheck:libs && pnpm -r --filter \"./artifacts/**\" --filter \"./scripts\" --if-present run typecheck"
+    "start": "node index.js"
   },
-  "private": true,
   "dependencies": {
     "discord.js": "^14.16.3",
     "@discordjs/rest": "^2.4.0",
     "discord-api-types": "^0.37.97"
-  },
-  "devDependencies": {
-    "typescript": "~5.9.2",
-    "prettier": "^3.8.1"
   }
 }
